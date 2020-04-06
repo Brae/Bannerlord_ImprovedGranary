@@ -12,7 +12,8 @@ namespace ImprovedGranary.CampaignBehavior
         public override void RegisterEvents()
         {
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.AddGameMenus));
-            CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.AddGameMenus));            
+            //CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.AddGameMenus));
+            CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.AddGameMenus));
         }
 
         public override void SyncData(IDataStore dataStore)
@@ -22,8 +23,7 @@ namespace ImprovedGranary.CampaignBehavior
 
         protected void AddGameMenus(CampaignGameStarter campaignGameSystemStarter)
         {
-            InformationManager.DisplayMessage(new InformationMessage("Loaded Improved Granary mod"));
-            campaignGameSystemStarter.AddGameMenuOption("town", "town_granary", "Open granary", new GameMenuOption.OnConditionDelegate(ImprovedGranaryCampaignBehavior.town_menu_granary_on_condition), new GameMenuOption.OnConsequenceDelegate(this.town_menu_granary_on_consequence), false, -1, false);
+            campaignGameSystemStarter.AddGameMenuOption("town", "town_granary", "Open granary", new GameMenuOption.OnConditionDelegate(ImprovedGranaryCampaignBehavior.town_menu_granary_on_condition), new GameMenuOption.OnConsequenceDelegate(this.town_menu_granary_on_consequence), false, 8, false);
         }
         
         private static bool town_menu_granary_on_condition(MenuCallbackArgs args)
@@ -41,7 +41,24 @@ namespace ImprovedGranary.CampaignBehavior
 
         private void doneStashDelegate()
         {
-            Settlement.CurrentSettlement.Town.FoodStocks = Settlement.CurrentSettlement.Town.FoodStocks + this.granaryRoster.TotalFood;
+            float newTotal = Settlement.CurrentSettlement.Town.FoodStocks + this.granaryRoster.TotalFood;
+            float difference = 0;
+            int upperLimit = Settlement.CurrentSettlement.Town.FoodStocksUpperLimit();
+            if (this.granaryRoster.TotalFood > 0)
+            {
+                if (newTotal > upperLimit)
+                {
+                    difference = upperLimit - Settlement.CurrentSettlement.Town.FoodStocks;
+                    Settlement.CurrentSettlement.Town.FoodStocks = upperLimit;
+                }
+                else
+                {
+                    difference = this.granaryRoster.TotalFood;
+                    Settlement.CurrentSettlement.Town.FoodStocks = newTotal;
+                }
+                InformationManager.DisplayMessage(new InformationMessage("Donated " + difference + " food to town granary"));
+            }
+            this.granaryRoster.RemoveAllItems();
         }
     }
  }
