@@ -12,7 +12,6 @@ namespace ImprovedGranary.CampaignBehavior
         public override void RegisterEvents()
         {
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.AddGameMenus));
-            //CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.AddGameMenus));
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.AddGameMenus));
         }
 
@@ -36,7 +35,8 @@ namespace ImprovedGranary.CampaignBehavior
         {
             LocationEncounter locationEncounter = PlayerEncounter.LocationEncounter;
             InventoryManager.OpenScreenAsTrade(this.granaryRoster, Settlement.CurrentSettlement.GetComponent<Town>(), InventoryManager.InventoryCategoryType.Goods, new InventoryManager.DoneLogicExtrasDelegate(this.doneStashDelegate));
-            //InventoryManager.OpenScreenAsStash(new ItemRoster());            
+            int availableSpace = Settlement.CurrentSettlement.Town.FoodStocksUpperLimit() - (int)Settlement.CurrentSettlement.Town.FoodStocks;
+            InformationManager.DisplayMessage(new InformationMessage("Available granary space: " + availableSpace));
         }
 
         private void doneStashDelegate()
@@ -56,7 +56,7 @@ namespace ImprovedGranary.CampaignBehavior
                     difference = this.granaryRoster.TotalFood;
                     Settlement.CurrentSettlement.Town.FoodStocks = newTotal;
                 }
-                InformationManager.DisplayMessage(new InformationMessage("Donated " + difference + " food to town granary"));
+                InformationManager.DisplayMessage(new InformationMessage("Donated " + difference + " food to granary at " + Settlement.CurrentSettlement.Name));
             }
             this.granaryRoster.RemoveAllItems();
         }
