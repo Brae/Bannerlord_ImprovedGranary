@@ -59,7 +59,7 @@ namespace ImprovedGranary.CampaignBehavior
                 }
                 InformationManager.DisplayMessage(new InformationMessage("Donated " + difference + " food to granary at " + Settlement.CurrentSettlement.Name));
             }
-            this.granaryRoster.RemoveAllItems();
+            this.granaryRoster.Clear();
         }
     }
  }
