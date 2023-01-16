@@ -1,8 +1,11 @@
 ﻿using System;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.Core;
-using TaleWorlds.MountAndBlade;
+using TaleWorlds.CampaignSystem.Inventory;
+using TaleWorlds.CampaignSystem.Roster;
+using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Library;
 
 namespace ImprovedGranary.CampaignBehavior
 {
@@ -35,7 +38,7 @@ namespace ImprovedGranary.CampaignBehavior
         private void town_menu_granary_on_consequence(MenuCallbackArgs args)
         {
             LocationEncounter locationEncounter = PlayerEncounter.LocationEncounter;
-            InventoryManager.OpenScreenAsTrade(this.granaryRoster, Settlement.CurrentSettlement.GetComponent<Town>(), InventoryManager.InventoryCategoryType.Goods, new InventoryManager.DoneLogicExtrasDelegate(this.doneStashDelegate));
+            InventoryManager.OpenScreenAsTrade(this.granaryRoster, Settlement.CurrentSettlement.SettlementComponent, InventoryManager.InventoryCategoryType.Goods, new InventoryManager.DoneLogicExtrasDelegate(this.doneStashDelegate));
             int availableSpace = Settlement.CurrentSettlement.Town.FoodStocksUpperLimit() - (int)Settlement.CurrentSettlement.Town.FoodStocks;
             InformationManager.DisplayMessage(new InformationMessage("Available granary space: " + availableSpace));
         }
@@ -44,7 +47,7 @@ namespace ImprovedGranary.CampaignBehavior
         {
             float newTotal = Settlement.CurrentSettlement.Town.FoodStocks + this.granaryRoster.TotalFood;
             float difference = 0;
-            int upperLimit = Settlement.CurrentSettlement.Town.FoodStocksUpperLimit();
+            float upperLimit = Settlement.CurrentSettlement.Town.FoodStocksUpperLimit();
             if (this.granaryRoster.TotalFood > 0)
             {
                 if (newTotal > upperLimit)
