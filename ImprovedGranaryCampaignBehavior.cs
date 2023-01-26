@@ -25,8 +25,8 @@ namespace ImprovedGranary.CampaignBehavior
 
         protected void AddGameMenus(CampaignGameStarter campaignGameSystemStarter)
         {
-            campaignGameSystemStarter.AddGameMenuOption("town", "town_granary", "Open granary", new GameMenuOption.OnConditionDelegate(ImprovedGranaryCampaignBehavior.town_menu_granary_on_condition), new GameMenuOption.OnConsequenceDelegate(this.town_menu_granary_on_consequence), false, 8, false);
-            campaignGameSystemStarter.AddGameMenuOption("castle", "castle_granary", "Open granary", new GameMenuOption.OnConditionDelegate(ImprovedGranaryCampaignBehavior.town_menu_granary_on_condition), new GameMenuOption.OnConsequenceDelegate(this.town_menu_granary_on_consequence), false, 4, false);
+            campaignGameSystemStarter.AddGameMenuOption("town", "town_granary", "Open granary", new GameMenuOption.OnConditionDelegate(ImprovedGranaryCampaignBehavior.town_menu_granary_on_condition), new GameMenuOption.OnConsequenceDelegate(this.town_menu_granary_on_consequence), false, 8, false, null);
+            campaignGameSystemStarter.AddGameMenuOption("castle", "castle_granary", "Open granary", new GameMenuOption.OnConditionDelegate(ImprovedGranaryCampaignBehavior.town_menu_granary_on_condition), new GameMenuOption.OnConsequenceDelegate(this.town_menu_granary_on_consequence), false, 4, false, null);
         }
         
         private static bool town_menu_granary_on_condition(MenuCallbackArgs args)
